@@ -20,12 +20,12 @@ const Header = () => {
       <Container className="flex-col w-full bg-primary items-start">
         <div className="flex items-center justify-between w-10/12 mx-auto text-secondary py-2 gap-1 md:gap-5">
           <p className="hidden lg:block">Более 10-ти лет опыта на рынке систем безопасности и мини АТС</p>
-          <div className="flex items-center gap-1 md:gap-5 lg:hidden">
+          <div className="flex flex-col sm:flex-row justify-end items-center gap-1 md:gap-5 lg:hidden">
             <p>info@elt.uz</p>
             <a href="tel: +998909337880" className="flex items-center">+998 90 933-78-80</a>
             <a href="tel: +998555108133" className="flex items-center">+998 55 510-81-33</a>
           </div>
-          <p>
+          <p className="ml-auto w-[40%]">
             Режим работы: ПН, ВТ, СР, ЧТ, СБ, ВС | с 10:00 - 20:00 Выходной: ПТ
           </p>
         </div>
@@ -36,7 +36,7 @@ const Header = () => {
               <input
                 type="text"
                 placeholder="Поиск по сайту"
-                className="py-1 md:py-2 rounded-3xl border border-primary pl-3 w-[170px] sm:w-[200px] md:w-[250px]"
+                className="py-2 rounded-3xl border border-primary pl-3 w-[170px] sm:w-[200px] md:w-[250px]"
               />
               <span className="absolute right-1 top-1/2 -translate-y-1/2 bg-primary rounded-full text-foreground h-[85%] aspect-square flex items-center justify-center">
                 <Search className="text-secondary w-3 md:w-5" />

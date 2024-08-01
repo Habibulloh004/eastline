@@ -8,6 +8,7 @@ const Footer = () => {
     <footer>
       <Container>
         <ul className="">
+          <li>Компания</li>
           {navItems.map((item) => {
             if (item.id === 1) return null;
             return (

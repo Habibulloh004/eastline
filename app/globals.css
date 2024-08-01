@@ -67,7 +67,7 @@ html {
   }
 
   .textSmall {
-    font-size: clamp(6px, 1vw, 11px);
+    font-size: clamp(10px, 1vw, 13px);
   }
   .textSmall2 {
     font-size: clamp(11px, 1.5vw, 14px);
