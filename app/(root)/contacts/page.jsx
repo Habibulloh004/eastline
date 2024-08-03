@@ -4,8 +4,6 @@ import db from "@/db/db";
 import React from "react";
 
 const Contacts = async () => {
-  const getReviews = await db.reviews.findMany()
-  console.log(getReviews);
   return (
     <Container className="min-h-[80vh] py-10 flex-col lg:flex-row gap-5">
       <div className="w-[40%] max-lg:w-full">
@@ -25,14 +23,8 @@ const Contacts = async () => {
             Ориентир: Масложирокомбинат.
           </li>
           <li>
-            Моб.:{" "}
-            <a href={`tel: +998909337880`}>
-              +998 90 933-78-80
-            </a>
-            <br /> Тел.:{" "}
-            <a href={`tel: +998555108133`}>
-              +998 55 510-81-33
-            </a>
+            Моб.: <a href={`tel: +998909337880`}>+998 90 933-78-80</a>
+            <br /> Тел.: <a href={`tel: +998555108133`}>+998 55 510-81-33</a>
           </li>
           <li>Эл. Почта: info@elt.uz</li>
         </ul>

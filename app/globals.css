@@ -6,10 +6,6 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
-  height: 100dvh;
-}
-
 .input-phone > * {
   background-color: hsl(210 40% 96.1%);
 }

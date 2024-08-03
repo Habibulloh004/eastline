@@ -10,6 +10,8 @@ import { Form } from "@/components/ui/form";
 import CustomFormField, { FormFieldType } from "../shared/customFormField";
 import { ReviewsFormValidation } from "@/lib/validation";
 import SubmitButton from "../shared/submitButton";
+import db from "@/db/db";
+import axios from "axios";
 
 export const ContactForm = () => {
   const router = useRouter();
@@ -34,14 +36,18 @@ export const ContactForm = () => {
         name: values.name,
         email: values.email,
         phone: values.phone,
+        message: values.message,
       };
+      const response = await axios.post("/api/review", user );
+
+      console.log(response);
 
       // const newUser = await createUser(user);
 
       // if (newUser) {
       //   router.push(`/patients/${newUser.$id}/register`);
       // }
-      form.reset();
+      // form.reset();
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -84,7 +90,9 @@ export const ContactForm = () => {
             label="Сообщения"
             placeholder="Напишите сообщения"
           />
-          <SubmitButton isLoading={isLoading} className="w-full">Отправить</SubmitButton>
+          <SubmitButton isLoading={isLoading} className="w-full">
+            Отправить
+          </SubmitButton>
         </form>
       </Form>
     </>

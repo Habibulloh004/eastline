@@ -2,13 +2,22 @@
 import { Logo } from "@/public/img";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { heroTitle } from "@/lib/iterationDetails";
+import db from "@/db/db";
+import axios from "axios";
 
 const HeroTitle = () => {
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const {data} = await axios.get("/api/review");
+      console.log(data.data);
+    };
+    fetchReviews()
+  }, []);
   const path = usePathname();
   const findPath = heroTitle.find((item) => item.path == path);
-  
+
   return (
     <section
       className={`w-10/12 mx-auto ${
