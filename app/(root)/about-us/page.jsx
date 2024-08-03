@@ -8,13 +8,6 @@ const AboutUs = () => {
   return (
     <main className="mb-40">
       <Container className={`flex-col`}>
-        <section className="w-full flex flex-col lg:flex-row items-start lg:items-center mt-10 lg:mt-20">
-          <Image src={Logo} className="w-[40vw] min-w-40" alt="Big logo" />
-          <p className="textBig ml-auto text-right text-primary font-semibold">
-            Компания <br />
-            «East Line Telekom»
-          </p>
-        </section>
         <section className="mt-5 lg:mt-20 lg:border rounded-lg">
           <div className="flex flex-col items-start justify-center space-y-3 lg:shadow-lg rounded-lg lg:px-12 py-3 lg:py-8 relative overflow-hidden min-h-[130px]">
             <Image
@@ -88,7 +81,7 @@ const AboutUs = () => {
             className="hidden xl:block w-[50vw]"
             alt="AboutCard1"
           />
-          <Container className="xl:bg-primary xl:text-secondary w-full flex-col justify-center items-start rounded-lg px-10 py-4 gap-8">
+          <Container className="xl:bg-primary xl:text-secondary w-full flex-col justify-center items-start rounded-lg px-10 py-4 gap-8 overflow-hidden">
             <div>
               <p className="textNormal2 font-semibold">
                 Деятельность компании «ELT» охватывает различные направления

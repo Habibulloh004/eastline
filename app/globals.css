@@ -6,6 +6,19 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  height: 100dvh;
+}
+
+.input-phone > * {
+  background-color: hsl(210 40% 96.1%);
+}
+
+.input-phone > *:focus {
+  outline: none;
+  border-color: transparent;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -83,6 +96,12 @@ html {
   }
   .textNormal3 {
     font-size: clamp(14px, 2.8vw, 22px);
+  }
+  .textNormal4 {
+    font-size: clamp(19px, 2.8vw, 24px);
+  }
+  .textNormal5 {
+    font-size: clamp(22px, 3vw, 32px);
   }
   .textBig {
     font-size: clamp(22px, 3vw, 40px);
