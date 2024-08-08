@@ -8,7 +8,7 @@ export default function ChatBot() {
         id: "413126",
         hash: "a41b728aa658401aa52ee005b83d9ec15b0bce3002e394f179251d00b5c88620",
         locale: "ru",
-        inline: true,
+        inline: false,
         setMeta: function (p) {
           this.params = (this.params || []).concat([p]);
         },
