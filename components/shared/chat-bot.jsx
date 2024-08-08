@@ -1,15 +1,14 @@
 "use client";
-import Head from "next/head";
 import { useEffect } from "react";
 
-export default function Home() {
+export default function ChatBot() {
   useEffect(() => {
     (function (a, m1, o, c, r, m2) {
       a[m2] = {
         id: "413126",
         hash: "a41b728aa658401aa52ee005b83d9ec15b0bce3002e394f179251d00b5c88620",
         locale: "ru",
-        inline: false,
+        inline: true,
         setMeta: function (p) {
           this.params = (this.params || []).concat([p]);
         },
@@ -26,8 +25,5 @@ export default function Home() {
     })(window, 0, "amoSocialButton", 0, 0, "amo_social_button");
   }, []);
 
-  return (
-    <>
-    </>
-  );
+  return <></>;
 }

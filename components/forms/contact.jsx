@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -10,11 +9,10 @@ import { Form } from "@/components/ui/form";
 import CustomFormField, { FormFieldType } from "../shared/customFormField";
 import { ReviewsFormValidation } from "@/lib/validation";
 import SubmitButton from "../shared/submitButton";
-import db from "@/db/db";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export const ContactForm = () => {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
@@ -30,7 +28,6 @@ export const ContactForm = () => {
   const onSubmit = async (values) => {
     setIsLoading(true);
 
-    console.log(values);
     try {
       const user = {
         name: values.name,
@@ -38,19 +35,15 @@ export const ContactForm = () => {
         phone: values.phone,
         message: values.message,
       };
-      const response = await axios.post("/api/review", user );
+      await axios.post("/api/review", user );
 
-      console.log(response);
+      toast.success('Ваш комментарий принят!')
 
-      // const newUser = await createUser(user);
-
-      // if (newUser) {
-      //   router.push(`/patients/${newUser.$id}/register`);
-      // }
-      // form.reset();
+      form.reset();
       setIsLoading(false);
     } catch (error) {
       console.log(error);
+      toast.error("Что то пошло не так. Пожалуйста, повторите попытку позже.")
     }
   };
 

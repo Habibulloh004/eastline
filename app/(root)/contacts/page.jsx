@@ -1,6 +1,5 @@
 import { ContactForm } from "@/components/forms/contact";
 import Container from "@/components/shared/container";
-import db from "@/db/db";
 import React from "react";
 
 const Contacts = async () => {
