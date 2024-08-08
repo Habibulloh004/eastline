@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import Image from "next/image";
 // import ReactCrop from "react-crop";
-import DropTarget from "@/components/shared/fileDnd";
+// import DropTarget from "@/components/shared/fileDnd";
 
 const ImagePage = () => {
-  const [image, setImage] = useState(null);
-  const [imageArray, setImageArray] = useState([]);
-  const [croppedImage, setCroppedImage] = useState(null);
-  const [backImage, setBackImage] = useState(null);
+//   const [image, setImage] = useState(null);
+//   const [imageArray, setImageArray] = useState([]);
+//   const [croppedImage, setCroppedImage] = useState(null);
+//   const [backImage, setBackImage] = useState(null);
   const supabase = createClient(
     "https://bxdxvaioiunezestlkri.supabase.co",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ4ZHh2YWlvaXVuZXplc3Rsa3JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI5MzU5MDEsImV4cCI6MjAzODUxMTkwMX0.VVkuv29ktY8PERuJGKMS7CcjvrkFbhz-gssBkOznuBk"
@@ -111,7 +111,7 @@ const ImagePage = () => {
       {/* {backImage && (
         <Image src={backImage} width={200} height={200} alt="rasm" />
       )} */}
-      {croppedImage && (
+      {/* {croppedImage && (
         <ReactCrop
           src={croppedImage.imageSrc}
           crop={croppedImage.crop}
@@ -119,8 +119,8 @@ const ImagePage = () => {
           onChange={handleCropChange}
           onComplete={handleCropComplete}
         />
-      )}
-      {imageArray.length > 0 && // Display images only if there are some
+      )} */}
+      {/* {imageArray.length > 0 && // Display images only if there are some
         imageArray?.map((item, index) => (
           <Image
             key={item.id}
@@ -130,7 +130,7 @@ const ImagePage = () => {
             height={200}
             onClick={() => handleImageSelect(index)} 
           />
-        ))}
+        ))} */}
     </div>
   );
 };
