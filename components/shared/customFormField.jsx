@@ -1,4 +1,3 @@
-import PhoneInput from "react-phone-number-input";
 import {
   FormControl,
   FormField,
@@ -7,6 +6,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import PhoneInput from "react-phone-number-input";
 import {
   Select,
   SelectContent,
@@ -35,6 +35,7 @@ const RenderInput = ({ field, className, props }) => {
           <Input
             placeholder={props.placeholder}
             {...field}
+            value={field.value || ""} // Ensure the input is controlled
             className={cn("textBig border-0", props.className, className)}
           />
         </FormControl>
@@ -45,6 +46,7 @@ const RenderInput = ({ field, className, props }) => {
           <Textarea
             placeholder={props.placeholder}
             {...field}
+            value={field.value || ""} // Ensure the textarea is controlled
             className={cn("shad-textArea", props.className, className)}
             disabled={props.disabled}
           />
@@ -53,7 +55,10 @@ const RenderInput = ({ field, className, props }) => {
     case FormFieldType.SELECT:
       return (
         <FormControl>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            value={field.value || ""} // Ensure the select is controlled
+            onValueChange={field.onChange}
+          >
             <FormControl>
               <SelectTrigger
                 className={cn(
@@ -81,9 +86,13 @@ const RenderInput = ({ field, className, props }) => {
             placeholder={props.placeholder}
             international
             withCountryCallingCode
-            value={field.value}
+            value={field.value || ""} // Ensure the phone input is controlled
             onChange={field.onChange}
-            className={cn("input-phone p-2 rounded-md", props.className, className)}
+            className={cn(
+              "input-phone p-2 rounded-md",
+              props.className,
+              className
+            )}
             style={{ borderColor: "transparent" }} // or borderColor: 'initial' to reset
           />
         </FormControl>
@@ -107,7 +116,11 @@ const CustomFormField = (props) => {
           {props.fieldType !== FormFieldType.CHECKBOX && label && (
             <FormLabel className="text-xs lg:text-base">{label}</FormLabel>
           )}
-          <RenderInput className="text-xs lg:text-base bg-secondary" field={field} props={props} />
+          <RenderInput
+            className="text-xs lg:text-base bg-secondary"
+            field={field}
+            props={props}
+          />
 
           <FormMessage className="shad-error" />
         </FormItem>

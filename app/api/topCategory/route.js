@@ -1,7 +1,11 @@
 import db from "@/db/db";
 
 export async function GET() {
-  const getTopCategroies = await db.topCategory.findMany();
+  const getTopCategroies = await db.topCategory.findMany({
+    include: {
+      categories: true,
+    },
+  });
   return Response.json({ data: getTopCategroies });
 }
 

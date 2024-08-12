@@ -15,8 +15,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "../ui/input";
 import HeroTitle from "./hero-title";
+import axios from "axios";
+import { HeaderDropdown } from "./header-dropdown";
 
-const Header = () => {
+const Header = async () => {
+  const topCategories = await axios.get(
+    `${process.env.BACK_URL}/api/topCategory`
+  );
+
   return (
     <>
       <header className="textSmall">
@@ -48,7 +54,7 @@ const Header = () => {
                 <Input
                   type="text"
                   placeholder="Поиск по сайту"
-                  className="py-2 rounded-3xl border border-primary pl-3 w-[170px] sm:w-[200px] md:w-[250px]"
+                  className="rounded-3xl border border-primary pl-3 w-[170px] sm:w-[200px] md:w-[250px]"
                 />
                 <span className="absolute right-1 top-1/2 -translate-y-1/2 bg-primary rounded-full text-foreground h-[85%] aspect-square flex items-center justify-center">
                   <Search className="text-secondary w-3 md:w-5" />
@@ -69,19 +75,22 @@ const Header = () => {
                   className="h-10 flex items-center justify-center"
                 >
                   {item.id === 2 ? (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger className="flex gap-2 items-center py-2 px-1 md:px-3">
-                        <Menu className="w-3 lg:w-5" />
-                        {item.name}
-                        <ChevronDown className="w-3 lg:w-5" />
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem>Profile</DropdownMenuItem>
-                        <DropdownMenuItem>Billing</DropdownMenuItem>
-                        <DropdownMenuItem>Team</DropdownMenuItem>
-                        <DropdownMenuItem>Subscription</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <>
+                    <HeaderDropdown topCategory={topCategories.data.data} />
+                      {/* <DropdownMenu>
+                        <DropdownMenuTrigger className="flex gap-2 items-center py-2 px-1 md:px-3">
+                          <Menu className="w-3 lg:w-5" />
+                          {item.name}
+                          <ChevronDown className="w-3 lg:w-5" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem>Profile</DropdownMenuItem>
+                          <DropdownMenuItem>Billing</DropdownMenuItem>
+                          <DropdownMenuItem>Team</DropdownMenuItem>
+                          <DropdownMenuItem>Subscription</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu> */}
+                    </>
                   ) : (
                     <Link href={`${item.path}`} className="py-2 px-3">
                       {item.name}
@@ -90,6 +99,11 @@ const Header = () => {
                 </li>
               );
             })}
+            <li className="h-10 flex items-center justify-center">
+              <Link href={`/dashboard`} className="py-2">
+                Test dashboard
+              </Link>
+            </li>
           </ul>
           <div className="hidden items-center gap-1 md:gap-5 lg:flex">
             <p>info@elt.uz</p>

@@ -36,7 +36,7 @@ model Category {
   name          String
   createdAt     DateTime     @default(now())
   updateAt      DateTime     @updatedAt
-  topCategory   TopCategory? @relation(fields: [topCategoryId], references: [id])
+  topCategory   TopCategory? @relation(fields: [topCategoryId], references: [id], onDelete: Cascade)
   topCategoryId String?
   products      Product[]
 }
@@ -51,6 +51,6 @@ model Product {
   image       String[]
   createdAt   DateTime  @default(now())
   updateAt    DateTime  @updatedAt
-  category    Category? @relation(fields: [categoryId], references: [id])
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId  String?
 }
