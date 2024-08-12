@@ -68,7 +68,7 @@ const Header = async () => {
                 >
                   {item.id === 2 ? (
                     <>
-                    {/* <HeaderDropdown topCategory={topCategories.data.data} /> */}
+                    <HeaderDropdown topCategory={topCategories.data.data} />
                     </>
                   ) : (
                     <Link href={`${item.path}`} className="py-2 px-3">

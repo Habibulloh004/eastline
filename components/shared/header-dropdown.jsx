@@ -27,7 +27,7 @@ export function HeaderDropdown({ topCategory }) {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="max-w-xs">
-        {topCategory.map((topCategory, idx) => (
+        {topCategory?.map((topCategory, idx) => (
           <DropdownMenuSub key={topCategory.id}>
             <DropdownMenuSubTrigger
               className="py-2 px-4 lg:text:sm"
@@ -35,7 +35,7 @@ export function HeaderDropdown({ topCategory }) {
             >
               {topCategory.name}
             </DropdownMenuSubTrigger>
-            {topCategory.categories.length ? (
+            {topCategory?.categories.length > 0 ? (
               <DropdownMenuPortal>
                 <DropdownMenuSubContent>
                   {topCategory.categories.map((category, i) => (
