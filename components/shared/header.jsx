@@ -2,17 +2,9 @@ import React from "react";
 import Container from "./container";
 import Image from "next/image";
 import { Logo } from "@/public/img";
-import { ChevronDown, Menu, Phone, Search } from "lucide-react";
+import { Phone, Search } from "lucide-react";
 import { navItems } from "@/lib/iterationDetails";
 import Link from "next/link";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "../ui/input";
 import HeroTitle from "./hero-title";
 import axios from "axios";
@@ -76,20 +68,7 @@ const Header = async () => {
                 >
                   {item.id === 2 ? (
                     <>
-                    <HeaderDropdown topCategory={topCategories.data.data} />
-                      {/* <DropdownMenu>
-                        <DropdownMenuTrigger className="flex gap-2 items-center py-2 px-1 md:px-3">
-                          <Menu className="w-3 lg:w-5" />
-                          {item.name}
-                          <ChevronDown className="w-3 lg:w-5" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem>Profile</DropdownMenuItem>
-                          <DropdownMenuItem>Billing</DropdownMenuItem>
-                          <DropdownMenuItem>Team</DropdownMenuItem>
-                          <DropdownMenuItem>Subscription</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu> */}
+                    {/* <HeaderDropdown topCategory={topCategories.data.data} /> */}
                     </>
                   ) : (
                     <Link href={`${item.path}`} className="py-2 px-3">
