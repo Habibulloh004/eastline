@@ -89,6 +89,7 @@ const DeleteItem = ({ deleteRow, payment }) => {
             <AlertDialogCancel onClick={() => setOpen(false)}>
               Отмена
             </AlertDialogCancel>
+            
             <AlertDialogAction
               className="hover:bg-primary"
               onClick={() => {
