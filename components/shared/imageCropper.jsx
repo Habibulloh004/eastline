@@ -18,7 +18,7 @@ const ImageCropper = ({ image, onCropDone, onCropCancel }) => {
     setAspectRatio(event.target.value);
   };
   return (
-    <div className="cropper lg:w-[60%] h-[60vh] relative flex items-end justify-center rounded-md overflow-hidden mx-auto">
+    <div className="cropper lg:w-[60%] h-[60vh] relative flex items-end justify-center rounded-md overflow-hidden mx-auto textSmall">
       <div>
         <Cropper
           image={image}
@@ -32,7 +32,7 @@ const ImageCropper = ({ image, onCropDone, onCropCancel }) => {
             containerStyle: {
               width: "100%",
               height: "70%",
-              zIndex: "999",
+              zIndex: "8",
               backgroundColor: "#fff",
             },
           }}
@@ -106,7 +106,7 @@ const ImageCropper = ({ image, onCropDone, onCropCancel }) => {
           </span>
         </div>
         <div className="flex gap-3 ">
-          <Button onClick={onCropCancel} variant="destructive">
+          <Button className="" onClick={onCropCancel} variant="destructive">
             Отмена
           </Button>
           <Button

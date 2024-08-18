@@ -7,8 +7,17 @@ export async function GET() {
 
 export async function POST(req) {
   const data = await req.json();
+  console.log(data);
   const createCategory = await db.category.create({
-    data,
+    data: {
+      name: data.name,
+      topCategory: {
+        connect: {
+          id: Number(data.topCategoryId),
+        },
+      },
+      image: data.image
+    },
   });
   return Response.json({ data: createCategory });
 }

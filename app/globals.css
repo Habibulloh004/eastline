@@ -15,6 +15,36 @@ html {
   border-color: transparent;
 }
 
+
+.playground {
+  padding-top: 8rem;
+  padding-bottom: 8rem;
+  padding-right: 2.4rem;
+  padding-left: 2.4rem;
+  width: 67rem;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.playground__h1 {
+  margin-bottom: 4rem;
+  font-size: 3.4rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+
+/* #amobutton {
+  width: 100px !important;
+  height: 100px !important;
+  border-radius: 50% !important;
+}
+#amobutton > .amo-button--main-icon {
+  width: 100% !important;
+  height: 100% !important;
+} */
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -23,7 +53,7 @@ html {
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 208, 80%, 30%, 1;
+    --primary: 208, 80%, 30%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -71,10 +101,9 @@ html {
     --chart-5: 340 75% 55%;
   }
 
-  .titleBig {
-    font-size: clamp(14px, 3vw, 32px);
+  .textSmall1 {
+    font-size: clamp(7px, .8vw, 13px);
   }
-
   .textSmall {
     font-size: clamp(10px, 1vw, 13px);
   }

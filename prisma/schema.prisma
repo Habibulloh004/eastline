@@ -15,7 +15,7 @@ datasource db {
 }
 
 model Reviews {
-  id        String   @id @default(uuid())
+  id        Int      @id @default(autoincrement())
   name      String
   phone     String
   email     String
@@ -24,7 +24,7 @@ model Reviews {
 }
 
 model TopCategory {
-  id         String     @id @default(uuid())
+  id         Int        @id @default(autoincrement())
   name       String
   createdAt  DateTime   @default(now())
   updateAt   DateTime   @updatedAt
@@ -32,17 +32,18 @@ model TopCategory {
 }
 
 model Category {
-  id            String       @id @default(uuid())
+  id            Int          @id @default(autoincrement())
   name          String
+  image         String
   createdAt     DateTime     @default(now())
   updateAt      DateTime     @updatedAt
   topCategory   TopCategory? @relation(fields: [topCategoryId], references: [id], onDelete: Cascade)
-  topCategoryId String?
+  topCategoryId Int?
   products      Product[]
 }
 
 model Product {
-  id          String    @id @default(uuid())
+  id          Int       @id @default(autoincrement())
   name        String
   description String
   feature     String
@@ -52,5 +53,5 @@ model Product {
   createdAt   DateTime  @default(now())
   updateAt    DateTime  @updatedAt
   category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId  String?
+  categoryId  Int?
 }

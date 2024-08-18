@@ -14,6 +14,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import Container from "../shared/container";
 import { ChevronLeft } from "lucide-react";
+import { revalidatePath } from "@/lib/revalidate";
 
 const TopCategoryForm = () => {
   const router = useRouter()
@@ -35,6 +36,7 @@ const TopCategoryForm = () => {
       toast.success("Верхняя категория создана успешно!");
 
       form.reset();
+      revalidatePath("changeTopCategory")
       setIsLoading(false);
     } catch (error) {
       console.log(error);

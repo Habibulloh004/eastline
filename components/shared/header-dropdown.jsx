@@ -40,7 +40,7 @@ export function HeaderDropdown({ topCategory }) {
                 <DropdownMenuSubContent>
                   {topCategory.categories.map((category, i) => (
                     <DropdownMenuItem asChild key={category.id}>
-                      <Link href={`/${topCategory.name}/${category.name}`}>
+                      <Link href={`/${topCategory.id}/${category.id}`}>
                         {category.name}
                       </Link>
                     </DropdownMenuItem>

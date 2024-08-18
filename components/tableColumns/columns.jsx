@@ -3,7 +3,7 @@
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "../ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DataTableColumnHeader } from "./dataTableColumnHeader";
+import { DataTableColumnHeader } from "../shared/dataTableColumnHeader";
 import { MoreHorizontal } from "lucide-react";
 
 import {

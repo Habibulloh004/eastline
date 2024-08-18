@@ -15,11 +15,16 @@ import toast from "react-hot-toast";
 import Container from "../shared/container";
 import { ChevronLeft } from "lucide-react";
 import { SelectItem } from "../ui/select";
+import { revalidatePath } from "@/lib/revalidate";
+import DropTarget from "../shared/fileDnd";
+import { useEdgeStore } from "@/lib/edgestore";
 
 const CategoryForm = () => {
   const router = useRouter();
   const [topCategories, setTopCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { edgestore } = useEdgeStore(); // Ensure this returns the edgestore object
+  const [image, setImage] = useState([]);
 
   const form = useForm({
     resolver: zodResolver(Category),
@@ -39,13 +44,31 @@ const CategoryForm = () => {
 
   const onSubmit = async (values) => {
     setIsLoading(true);
+    let uploadedUrl = "";
+    let imageToUpload = image[0].file;
 
     try {
-      await axios.post("/api/category", values);
+      const res = await edgestore.publicFiles.upload({
+        file: imageToUpload,
+        onProgressChange: (progress) => {
+          console.log("Upload progress:", progress);
+        },
+      });
+      console.log("Image uploaded successfully:", res);
+      uploadedUrl = res.url;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Ошибка загрузки изображения. Попробуйте еще раз.");
+    }
+
+    try {
+      await axios.post("/api/category", { ...values, image: uploadedUrl });
 
       toast.success("Категория создана успешно!");
 
       form.reset();
+      setImage([])
+      revalidatePath("changeCategory");
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -67,31 +90,33 @@ const CategoryForm = () => {
         <p>Создать категорию</p>
       </div>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex-1 space-y-6 w-full lg:w-1/2"
-        >
-          <CustomFormField
-            fieldType={FormFieldType.INPUT}
-            control={form.control}
-            name="name"
-            label="Название категории"
-          />
-          <CustomFormField
-            fieldType={FormFieldType.SELECT}
-            control={form.control}
-            name="topCategoryId"
-            label="Верхнюю категория"
-            placeholder="Выберите верхнюю категорию"
-          >
-            {topCategories.map((category) => {
-              return (
-                <SelectItem key={category.id} value={category.id}>
-                  <p>{category.name}</p>
-                </SelectItem>
-              );
-            })}
-          </CustomFormField>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 w-full">
+          <div className="w-full space-y-6 lg:w-1/2">
+            <CustomFormField
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              name="name"
+              label="Название категории"
+            />
+            <CustomFormField
+              fieldType={FormFieldType.SELECT}
+              control={form.control}
+              name="topCategoryId"
+              label="Верхнюю категория"
+              placeholder="Выберите верхнюю категорию"
+            >
+              {topCategories.map((category) => {
+                return (
+                  <SelectItem key={`${category.id}`} value={`${category.id}`}>
+                    <p>{category.name}</p>
+                  </SelectItem>
+                );
+              })}
+            </CustomFormField>
+          </div>
+          <div className="my-6">
+            <DropTarget images={image} setImages={setImage} limitImg={1} />
+          </div>
           <SubmitButton isLoading={isLoading} className="w-full">
             Отправить
           </SubmitButton>

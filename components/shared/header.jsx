@@ -11,9 +11,12 @@ import axios from "axios";
 import { HeaderDropdown } from "./header-dropdown";
 
 const Header = async () => {
-  const topCategories = await axios.get(
-    `${process.env.BACK_URL}/api/topCategory`
-  );
+  const fetchData = async () => {
+    const result = await axios.get(`${process.env.BACK_URL}/api/topCategory`);
+    return result;
+  };
+  
+  const topCategories = await fetchData();
 
   return (
     <>
@@ -56,7 +59,7 @@ const Header = async () => {
           </div>
         </Container>
       </header>
-      <nav className="text-secondary textSmall bg-primary w-full sticky top-0 z-[99999]">
+      <nav className="text-secondary textSmall bg-primary w-full sticky top-0 z-[9]">
         <Container>
           <ul className="flex items-center gap-2 md:gap-10">
             {navItems.map((item) => {
@@ -68,7 +71,7 @@ const Header = async () => {
                 >
                   {item.id === 2 ? (
                     <>
-                    <HeaderDropdown topCategory={topCategories.data.data} />
+                      <HeaderDropdown topCategory={topCategories.data.data} />
                     </>
                   ) : (
                     <Link href={`${item.path}`} className="py-2 px-3">

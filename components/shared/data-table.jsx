@@ -78,11 +78,11 @@ export function DataTable({ columns, data }) {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    initialState: {
-      pagination: {
-        pageSize: 5, // Set default page size to 5
-      },
-    },
+    // initialState: {
+    //   pagination: {
+    //     pageSize: 5, // Set default page size to 5
+    //   },
+    // },
   });
 
   // Ensure sorting when fuzzy filtering by fullName
