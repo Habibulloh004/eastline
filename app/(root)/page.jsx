@@ -23,8 +23,8 @@ export default async function Home() {
 
   return (
     <div className="min-h-[50%] py-10 flex flex-col items-center justify-center">
-      {/* <Banner products={randomProducts} categories={categories} />
-      <AllCategories categories={categories} topCategories={topCategories} /> */}
+      <Banner products={randomProducts} categories={categories} />
+      <AllCategories categories={categories} topCategories={topCategories} />
       <AllProducts products={lastProducts} categories={categories} />
     </div>
   );
