@@ -36,6 +36,7 @@ export default function RootLayout({ children }) {
             showAtBottom={false}
           />
           <Header />
+          
           <div className="grow">{children}</div>
           <Footer />
           {/* <ChatBot /> */}
