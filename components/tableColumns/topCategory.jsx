@@ -2,7 +2,7 @@
 "use client";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "../shared/dataTableColumnHeader";
-import DeleteItem from "@/app/(root)/dashboard/[details]/deleteItems";
+import DeleteItem from "../pages/dashboard/deleteItems";
 
 export const topCategory = [
   {
