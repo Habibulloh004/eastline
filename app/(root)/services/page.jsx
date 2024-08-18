@@ -3,7 +3,7 @@ import { Sertificate1, Sertificate2, ServiceBanner } from "@/public/img";
 import Image from "next/image";
 import React from "react";
 
-const Services = () => {
+export async function Services() {
   return (
     <section className="relative min-h-screen flex items-center">
       <div className="lg:hidden block w-full h-full absolute top-20 right-0 -z-10">
@@ -57,6 +57,4 @@ const Services = () => {
       </Container>
     </section>
   );
-};
-
-export default Services;
+}
