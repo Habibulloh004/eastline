@@ -1,8 +1,8 @@
 import CategoryForm from "@/components/forms/category";
 import ProductForm from "@/components/forms/product";
 import TopCategoryForm from "@/components/forms/topCategory";
+import GetElements from "@/components/pages/dashboard/getElements";
 import React from "react";
-import GetElements from "./getElements";
 
 
 const Create = ({ params }) => {
