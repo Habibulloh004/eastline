@@ -58,7 +58,7 @@ const AllProducts = ({ products, categories }) => {
       <section className="py-5 w-full flex justify-between gap-5 items-start">
         <div className="lg:grid w-1/2 grid-cols-1 gap-5 hidden">
           {renderedProducts.length &&
-            renderedProducts.slice(2).map((item, i) => (
+            renderedProducts.slice(0, 2).map((item, i) => (
               <Cards variant={"first"} props={item} key={i} />
             ))}
         </div>
