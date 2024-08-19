@@ -1,5 +1,4 @@
 "use client";
-
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -14,16 +13,25 @@ import Container from "../shared/container";
 import { ChevronLeft } from "lucide-react";
 import { SelectItem } from "../ui/select";
 import DropTarget from "../shared/fileDnd";
-import { revalidatePath } from "@/lib/revalidate";
-import { useEdgeStore } from "@/lib/edgestore";
+import { supabase } from "@/lib/utils";
 
 const ProductForm = () => {
   const router = useRouter();
+  const [images, setImages] = useState([]);
   const [topCategories, setTopCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { edgestore } = useEdgeStore(); // Ensure this returns the edgestore object
-  const [images, setImages] = useState([]);
-  const [imgUrl, setImgUrl] = useState([]);
+
+  const dataURLToBlob = (dataURL) => {
+    const arr = dataURL.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
+  };
 
   const form = useForm({
     resolver: zodResolver(Product),
@@ -41,40 +49,53 @@ const ProductForm = () => {
     getCategories();
   }, []);
 
-  const onSubmit = async (values) => {
-    setIsLoading(true);
-    const uploadedUrls = [];
+  const upload = async () => {
+    let urlArr = [];
+
     for (const image of images) {
       let imageToUpload = image.file;
 
-      try {
-        const res = await edgestore.publicFiles.upload({
-          file: imageToUpload,
-          onProgressChange: (progress) => {
-            console.log("Upload progress:", progress);
-          },
-        });
-        console.log("Image uploaded successfully:", res);
-        // setImgUrl([...imgUrl, res.url]);
-        uploadedUrls.push(res.url);
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        toast.error("Ошибка загрузки изображения. Попробуйте еще раз.");
+      if (image.cropped) {
+        imageToUpload = dataURLToBlob(image.url);
+      }
+
+      // File doesn't exist, upload it
+      const { data, error: uploadError } = await supabase.storage
+        .from("eastLine_images")
+        .upload(image.name + crypto.randomUUID(), imageToUpload);
+
+      if (uploadError) {
+        console.log("Error uploading image:", uploadError);
+      } else {
+        console.log("Image uploaded successfully:", data);
+
+        const { data: newPublicUrlData } = supabase.storage
+          .from("eastLine_images")
+          .getPublicUrl(image.name);
+
+        console.log("Public URL:", newPublicUrlData.publicUrl);
+        urlArr.push(newPublicUrlData.publicUrl);
       }
     }
 
+    return urlArr;
+  };
+
+  const onSubmit = async (values) => {
+    setIsLoading(true);
+
     try {
-      await axios.post("/api/product", { ...values, images: uploadedUrls });
+      const res = await upload();
+      await axios.post("/api/product", { ...values, images: res });
 
       toast.success("Товар создан успешно!");
 
       form.reset();
       setImages([]);
-      revalidatePath("changeProduct");
+      setIsLoading(false);
     } catch (error) {
-      console.error("Error creating product:", error);
+      console.log(error);
       toast.error("Что-то пошло не так. Пожалуйста, повторите попытку позже.");
-    } finally {
       setIsLoading(false);
     }
   };
@@ -89,7 +110,7 @@ const ProductForm = () => {
         <p>Создать товар</p>
       </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 w-full">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 w-full ">
           <div className="w-full space-y-6 lg:w-1/2">
             <CustomFormField
               fieldType={FormFieldType.INPUT}
@@ -97,6 +118,7 @@ const ProductForm = () => {
               name="name"
               label="Название товара"
             />
+
             <CustomFormField
               fieldType={FormFieldType.INPUT}
               control={form.control}
@@ -121,6 +143,7 @@ const ProductForm = () => {
               name="feature"
               label="Характеристика продукта"
             />
+
             <CustomFormField
               fieldType={FormFieldType.SELECT}
               control={form.control}
@@ -136,8 +159,9 @@ const ProductForm = () => {
             </CustomFormField>
           </div>
           <div className="my-6">
-            <DropTarget images={images} setImages={setImages} limitImg={3} />
+            <DropTarget images={images} setImages={setImages} />
           </div>
+
           <SubmitButton isLoading={isLoading} className="w-full">
             Отправить
           </SubmitButton>

@@ -3,7 +3,7 @@ import { crudPage } from "@/lib/iterationDetails";
 import Link from "next/link";
 import React from "react";
 
-const Dashboard = () => {
+async function Dashboard() {
   return (
     <Container>
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 justify-between place-content-between gap-5 my-10 lg:my-20 textSmall3">
@@ -17,4 +17,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Dashboard

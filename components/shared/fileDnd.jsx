@@ -8,7 +8,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import ImageCropper from "./imageCropper";
 import toast from "react-hot-toast";
 
-function DropTarget({ images, setImages, limitImg }) {
+function DropTarget({ images, setImages }) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef();
   const [cropImageUrl, setCropImageUrl] = useState("");
@@ -23,14 +23,15 @@ function DropTarget({ images, setImages, limitImg }) {
     const files = event.target.files;
     if (files.length === 0) return;
     handleFiles(files);
+    event.target.value = "";
   }
 
   function handleFiles(files) {
     const newImages = [];
     const maxSize = 2 * 1024 * 1024; // 4MB in bytes
 
-    if (images.length + files.length > limitImg) {
-      toast.error(`Вы можете выбрать не более ${limitImg} изображений`);
+    if (images.length + files.length > 3) {
+      toast.error("Вы можете выбрать не более 3 изображений");
       return;
     }
 
@@ -57,7 +58,7 @@ function DropTarget({ images, setImages, limitImg }) {
   }
 
   function deleteImage(index) {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImages((prevImages) => prevImages.filter((_, i) => i != index));
   }
 
   function onDragOver(event) {
@@ -102,21 +103,11 @@ function DropTarget({ images, setImages, limitImg }) {
 
       const dataUrl = canvasEle.toDataURL("image/jpeg");
 
-      // Convert dataURL to Blob (file object)
-      const blob = dataURLToBlob(dataUrl);
-      const croppedFile = new File(
-        [blob],
-        `cropped_${images[currentImageIndex].name}`,
-        {
-          type: "image/jpeg",
-        }
-      );
-
       // Update the specific image in the images array
       setImages((prevImages) =>
         prevImages.map((img, index) =>
           index === currentImageIndex
-            ? { ...img, url: dataUrl, file: croppedFile, cropped: true }
+            ? { ...img, url: dataUrl, cropped: true }
             : img
         )
       );
@@ -124,21 +115,6 @@ function DropTarget({ images, setImages, limitImg }) {
       setCurrentPage("choose-img");
       setCropImageUrl("");
     };
-  }
-
-  // Helper function to convert dataURL to Blob
-  function dataURLToBlob(dataUrl) {
-    const arr = dataUrl.split(",");
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-
-    return new Blob([u8arr], { type: mime });
   }
 
   function onCropCancel() {
@@ -149,7 +125,7 @@ function DropTarget({ images, setImages, limitImg }) {
   return (
     <>
       {currentPage === "choose-img" ? (
-        <div className="p-4 border rounded-lg overflow-hidden textSmall3">
+        <div className="p-4 border rounded-lg overflow-hidden">
           <section className="flex items-center flex-col lg:flex-row justify-between gap-5 w-full">
             <div className="lg:w-1/2 ">
               <div>

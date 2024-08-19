@@ -4,7 +4,7 @@ import { AboutBanner, AboutCard1, AboutCard2, Logo } from "@/public/img";
 import Image from "next/image";
 import React from "react";
 
-const AboutUs = () => {
+async function AboutUs() {
   return (
     <main className="mb-40">
       <Container className={`flex-col`}>
@@ -158,6 +158,5 @@ const AboutUs = () => {
       </Container>
     </main>
   );
-};
-
-export default AboutUs;
+}
+export default AboutUs

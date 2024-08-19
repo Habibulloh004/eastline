@@ -1,9 +1,8 @@
 import React from 'react'
 
-const Page = () => {
+async function Page() {
   return (
     <div>Page</div>
   )
 }
-
 export default Page

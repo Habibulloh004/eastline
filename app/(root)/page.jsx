@@ -3,7 +3,7 @@ import AllProducts from "@/components/shared/allProducts";
 import Banner from "@/components/shared/banner";
 import { getLastProducts } from "@/lib/utils";
 
-export default async function Home() {
+async function Home() {
   // const products = await db.product.findMany();
   // const categories = await db.category.findMany({
   //   include: {
@@ -30,3 +30,4 @@ export default async function Home() {
     </div>
   );
 }
+export default Home

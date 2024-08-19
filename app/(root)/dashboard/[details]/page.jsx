@@ -4,8 +4,7 @@ import TopCategoryForm from "@/components/forms/topCategory";
 import GetElements from "@/components/pages/dashboard/getElements";
 import React from "react";
 
-
-const Create = ({ params }) => {
+async function Create({ params }) {
   const renderPage = () => {
     switch (params.details) {
       case "createTopCategory":
@@ -19,9 +18,6 @@ const Create = ({ params }) => {
         return <GetElements param={params.details} />;
     }
   };
-
-
   return <>{renderPage()}</>;
-};
-
-export default Create;
+}
+export default Create

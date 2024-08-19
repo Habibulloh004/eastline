@@ -2,7 +2,7 @@ import { ContactForm } from "@/components/forms/contact";
 import Container from "@/components/shared/container";
 import React from "react";
 
-const Contacts = async () => {
+async function Contacts() {
   return (
     <Container className="min-h-[80vh] py-10 flex-col lg:flex-row gap-5">
       <div className="w-[40%] max-lg:w-full">
@@ -31,5 +31,4 @@ const Contacts = async () => {
     </Container>
   );
 };
-
-export default Contacts;
+export default Contacts
