@@ -22,11 +22,11 @@ export function DataTableViewOptions({ table }) {
           className="ml-auto hidden h-10 md:flex"
         >
           <MixerHorizontalIcon className="mr-2 h-4 w-4" />
-          View
+          Вид
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[150px]">
-        <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+        <DropdownMenuLabel>Переключить столбцы</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table
           .getAllColumns()

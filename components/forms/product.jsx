@@ -1,5 +1,6 @@
 "use client";
-import { useRouter } from "next/navigation";
+
+import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -17,6 +18,9 @@ import { supabase } from "@/lib/utils";
 
 const ProductForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
   const [images, setImages] = useState([]);
   const [topCategories, setTopCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,19 +45,15 @@ const ProductForm = () => {
     },
   });
 
-  useEffect(() => {
-    const getCategories = async () => {
-      const { data } = await axios.get("/api/category");
-      setTopCategories(data.data);
-    };
-    getCategories();
-  }, []);
-
   const upload = async () => {
     let urlArr = [];
 
     for (const image of images) {
       let imageToUpload = image.file;
+      if (!imageToUpload) {
+        urlArr.push(image.url);
+        continue;
+      }
 
       if (image.cropped) {
         imageToUpload = dataURLToBlob(image.url);
@@ -62,10 +62,16 @@ const ProductForm = () => {
       // File doesn't exist, upload it
       const { data, error: uploadError } = await supabase.storage
         .from("eastLine_images")
-        .upload(image.name + crypto.randomUUID(), imageToUpload);
+        .upload(image.name, imageToUpload);
 
       if (uploadError) {
         console.log("Error uploading image:", uploadError);
+        const { data: newPublicUrlData } = supabase.storage
+          .from("eastLine_images")
+          .getPublicUrl(image.name);
+
+        console.log("Exist URL:", newPublicUrlData.publicUrl);
+        urlArr.push(newPublicUrlData.publicUrl);
       } else {
         console.log("Image uploaded successfully:", data);
 
@@ -82,13 +88,28 @@ const ProductForm = () => {
   };
 
   const onSubmit = async (values) => {
+    if (!images.length) {
+      toast.error("Пожалуйста, выберите изображение");
+      return;
+    }
     setIsLoading(true);
 
     try {
-      const res = await upload();
-      await axios.post("/api/product", { ...values, images: res });
-
-      toast.success("Товар создан успешно!");
+      const imagesUpload = await upload();
+      if (id) {
+        const updateImages = console.log(imagesUpload, "upload image");
+        const res = await axios.patch(`/api/product?id=${id}`, {
+          ...values,
+          images: imagesUpload
+        });
+        if (res) {
+          toast.success("Товар изменена успешно!");
+          router.push("/dashboard");
+        }
+      } else {
+        await axios.post("/api/product", { ...values, images: imagesUpload });
+        toast.success("Товар создан успешно!");
+      }
 
       form.reset();
       setImages([]);
@@ -99,6 +120,44 @@ const ProductForm = () => {
       setIsLoading(false);
     }
   };
+
+  async function updateData() {
+    try {
+      const res = await axios.get(`/api/product?id=${id}`);
+      if (res) {
+        const { name, description, feature, brand, price, categoryId, image } =
+          res.data.data[0];
+        form.setValue("name", name);
+        form.setValue("description", description);
+        form.setValue("feature", feature);
+        form.setValue("brand", brand);
+        form.setValue("price", price);
+        form.setValue("categoryId", categoryId);
+        setImages(
+          image.map((img) => {
+            return {
+              url: img,
+            };
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const { data } = await axios.get("/api/category");
+      setTopCategories(data.data);
+    };
+    getCategories();
+
+    if (id) {
+      updateData();
+    }
+    //eslint-disable-next-line
+  }, [id]);
 
   return (
     <Container className="my-10 lg:my-20 flex-col items-start">

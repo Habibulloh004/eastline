@@ -15,7 +15,7 @@ async function AboutUs() {
               className="w-full h-full absolute top-0 right-0 -z-10"
               alt="bgBanner"
             />
-            <p className="titleBig font-semibold w-[75%]">
+            <p className="textBig font-semibold w-[75%]">
               Более 10-ти лет успешно работаем на рынке систем безопасности и
               мини АТС
             </p>
@@ -150,7 +150,7 @@ async function AboutUs() {
             alt="AboutCard2"
           />
         </section>
-        <p className="textNormal3 text-primary font-bold text-center w-10/12 mt-5 lg:mt-10">
+        <p className="textNormal3 text-primary font-bold text-center w-10/12 mt-8 lg:mt-20">
           Мы с уверенностью смотрим в будущее, основывая свою деятельность на
           принципах честности, открытости и порядочности, стремясь c каждым днем
           развиваться и совершенствоваться.

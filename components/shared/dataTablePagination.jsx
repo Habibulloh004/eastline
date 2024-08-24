@@ -18,12 +18,13 @@ export function DataTablePagination({ table }) {
   return (
     <div className="flex items-center justify-between px-2 w-full max-md:flex-col flex-row max-md:gap-5">
       <div className="flex-1 text-xs lg:text-base text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
+        {table.getFilteredSelectedRowModel().rows.length} из{" "}
+        {table.getFilteredRowModel().rows.length} строк выбрано.
       </div>
+
       <div className="flex items-center space-x-6 lg:space-x-8 max-sm:flex-col flex-row max-sm:gap-5 max-md:justify-center">
         <div className="flex items-center space-x-2">
-          <p className="text-xs lg:text-base font-medium">Rows per page</p>
+          <p className="text-xs lg:text-base font-medium">Строк на странице</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
@@ -42,10 +43,11 @@ export function DataTablePagination({ table }) {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex w-[100px] items-center justify-center text-xs lg:text-base font-medium">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
+        <div className="flex items-center justify-center text-xs lg:text-base font-medium">
+          Страница {table.getState().pagination.pageIndex + 1} из{" "}
           {table.getPageCount()}
         </div>
+
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"

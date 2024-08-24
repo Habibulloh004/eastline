@@ -46,8 +46,13 @@ function DropTarget({ images, setImages }) {
       }
 
       if (!images.some((e) => e.name === files[i].name)) {
+        const fileNameParts = files[i].name.split(".");
+        const nameWithoutExtension = fileNameParts.slice(0, -1).join(".");
+        const extension = fileNameParts.slice(-1)[0];
+        const newName = `${nameWithoutExtension}-${crypto.randomUUID()}.${extension}`;
+
         newImages.push({
-          name: files[i].name,
+          name: newName,
           url: URL.createObjectURL(files[i]),
           file: files[i],
           cropped: false, // To track if the image has been cropped
@@ -167,31 +172,38 @@ function DropTarget({ images, setImages }) {
             </div>
 
             <div className="mt-4 lg:w-[45%] flex flex-wrap gap-3 justify-center lg:justify-between items-start overflow-y-auto">
-              {images.map((image, index) => (
-                <div
-                  key={index}
-                  className="relative w-[100px] md:w-[130px] lg:w-[170px] aspect-square border rounded-md overflow-hidden"
-                >
-                  <span
-                    className="absolute top-2 right-2 p-1 text-lg cursor-pointer text-primary z-50 bg-red-500 rounded-md"
-                    onClick={() => deleteImage(index)}
+              {images.map((image, index) => {
+                console.log(image);
+                return (
+                  <div
+                    key={index}
+                    className="relative w-[100px] md:w-[130px] lg:w-[170px] aspect-square border rounded-md overflow-hidden"
                   >
-                    <X className="w-3 h-3 lg:w-5 lg:h-5 text-secondary" />
-                  </span>
-                  <Image
-                    width={100}
-                    height={100}
-                    src={image.url}
-                    alt={image.name}
-                    className="w-full aspect-square h-full rounded-lg"
-                    onClick={() => {
-                      setCropImageUrl(image.url);
-                      setCurrentImageIndex(index);
-                      setCurrentPage("crop-img");
-                    }}
-                  />
-                </div>
-              ))}
+                    <span
+                      className="absolute top-2 right-2 p-1 text-lg cursor-pointer text-primary z-8 bg-red-500 rounded-md"
+                      onClick={() => deleteImage(index)}
+                    >
+                      <X className="w-3 h-3 lg:w-5 lg:h-5 text-secondary" />
+                    </span>
+                    <Image
+                      width={100}
+                      height={100}
+                      src={`${image.url}`}
+                      alt={image.name ?? "img"}
+                      className="w-full aspect-square h-full rounded-lg"
+                      onClick={() => {
+                        if (image.file) {
+                          setCropImageUrl(image.url);
+                          setCurrentImageIndex(index);
+                          setCurrentPage("crop-img");
+                        } else {
+                          toast.error("Это изображение невозможно изменить!");
+                        }
+                      }}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </section>
         </div>

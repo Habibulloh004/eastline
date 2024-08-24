@@ -6,8 +6,6 @@ export async function DELETE(req) {
     const deleteTopCategory = await db.topCategory.delete({
       where: { id: Number(id) },
     });
-    console.log(deleteTopCategory);
-    console.log(id);
 
     return new Response(
       JSON.stringify({ success: true, data: deleteTopCategory }),
@@ -21,13 +19,24 @@ export async function DELETE(req) {
   }
 }
 
-export async function GET() {
-  const getTopCategroies = await db.topCategory.findMany({
+export async function GET(req) {
+  const id = await req.nextUrl.searchParams.get("id");
+
+  const queryOptions = {
     include: {
       categories: true,
     },
-  });
-  return Response.json({ data: getTopCategroies });
+  };
+
+  if (id) {
+    queryOptions.where = {
+      id: Number(id),
+    };
+  }
+
+  const getTopCategories = await db.topCategory.findMany(queryOptions);
+
+  return Response.json({ data: getTopCategories });
 }
 
 export async function POST(req) {
@@ -37,4 +46,26 @@ export async function POST(req) {
   });
   console.log("error", createTopCategory);
   return Response.json({ data: createTopCategory });
+}
+export async function PATCH(req) {
+  const data = await req.json();
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    const updateTopCategory = await db.topCategory.update({
+      where: { id: Number(id) },
+      data: { name: data.name },
+    });
+
+    return new Response(
+      JSON.stringify({ success: true, data: updateTopCategory }),
+      { status: 200 }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ success: false, error: error.message }),
+      { status: 500 }
+    );
+  }
 }

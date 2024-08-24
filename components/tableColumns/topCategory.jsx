@@ -34,6 +34,12 @@ export const topCategory = [
     ),
   },
   {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Создано в" />
+    ),
+  },
+  {
     id: "actions",
     cell: ({ row }) => <DeleteItem payment={row.original} />,
   },

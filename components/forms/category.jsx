@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -16,14 +17,15 @@ import { ChevronLeft } from "lucide-react";
 import { SelectItem } from "../ui/select";
 import { revalidatePath } from "@/lib/revalidate";
 import DropTarget from "../shared/fileDnd";
-import { useEdgeStore } from "@/lib/edgestore";
 import { supabase } from "@/lib/utils";
 
 const CategoryForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
   const [topCategories, setTopCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { edgestore } = useEdgeStore();
   const [image, setImage] = useState([]);
 
   const form = useForm({
@@ -33,14 +35,6 @@ const CategoryForm = () => {
       topCategoryId: "",
     },
   });
-
-  useEffect(() => {
-    const getCategories = async () => {
-      const { data } = await axios.get("/api/topCategory");
-      setTopCategories(data.data);
-    };
-    getCategories();
-  }, []);
 
   function dataURLToBlob(dataURL) {
     const arr = dataURL.split(",");
@@ -55,49 +49,75 @@ const CategoryForm = () => {
   }
 
   const onSubmit = async (values) => {
+    if (!image.length) {
+      toast.error("Пожалуйста, выберите изображение");
+      return;
+    }
     setIsLoading(true);
+
+    if (id && image.length <= 0) {
+      toast.error("Изображение обязательно для заполнения.");
+      setIsLoading(false);
+      return;
+    }
+
     let uploadedUrl = "";
 
     let imageToUpload = image[0]?.file;
-
-    if (image[0]?.cropped) {
-      imageToUpload = dataURLToBlob(image[0].url);
-    }
-
-    try {
-      let imageToUpload = image[0].file;
-
-      if (image.cropped) {
+    if (imageToUpload) {
+      if (image[0]?.cropped) {
         imageToUpload = dataURLToBlob(image[0].url);
       }
 
-      console.log(imageToUpload);
-      // File doesn't exist, upload it
-      const { data, error: uploadError } = await supabase.storage
-        .from("eastLine_images")
-        .upload(image[0].name + crypto.randomUUID(), imageToUpload);
+      try {
+        if (image.cropped) {
+          imageToUpload = dataURLToBlob(image[0].url);
+        }
 
-      if (uploadError) {
-        console.log("Error uploading image:", uploadError);
-      } else {
-        console.log("Image uploaded successfully:", data);
-
-        const { data: newPublicUrlData } = supabase.storage
+        console.log(imageToUpload);
+        // File doesn't exist, upload it
+        const { data, error: uploadError } = await supabase.storage
           .from("eastLine_images")
-          .getPublicUrl(image.name);
+          .upload(image[0].name, imageToUpload);
 
-        console.log("Public URL:", newPublicUrlData.publicUrl);
-        uploadedUrl = newPublicUrlData.publicUrl
+        if (uploadError && uploadError.statusCode == 409) {
+          console.log("Error uploading image:", uploadError);
+          const { data: newPublicUrlData } = await supabase.storage
+            .from("eastLine_images")
+            .getPublicUrl(image[0].name);
+
+          console.log("Exist URL:", newPublicUrlData.publicUrl);
+          uploadedUrl = newPublicUrlData.publicUrl;
+        } else {
+          console.log("Image uploaded successfully:", data);
+
+          const { data: newPublicUrlData } = await supabase.storage
+            .from("eastLine_images")
+            .getPublicUrl(image[0].name);
+
+          console.log("Public URL:", newPublicUrlData.publicUrl);
+          uploadedUrl = newPublicUrlData.publicUrl;
+        }
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        toast.error("Ошибка загрузки изображения. Попробуйте еще раз.");
       }
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      toast.error("Ошибка загрузки изображения. Попробуйте еще раз.");
     }
 
     try {
-      await axios.post("/api/category", { ...values, image: uploadedUrl });
-
-      toast.success("Категория создана успешно!");
+      if (id) {
+        await axios.patch(`/api/category?id=${id}`, {
+          ...values,
+          image: uploadedUrl ? uploadedUrl : image[0].url,
+        });
+        toast.success("Категория изменена успешно!");
+      } else {
+        await axios.post("/api/category", {
+          ...values,
+          image: uploadedUrl,
+        });
+        toast.success("Категория создана успешно!");
+      }
 
       form.reset();
       setImage([]);
@@ -108,9 +128,38 @@ const CategoryForm = () => {
     } finally {
       setIsLoading(false);
     }
+    // router.push("/dashboard");
   };
 
-  console.log(image);
+  async function updateData() {
+    try {
+      const res = await axios.get(`/api/category?id=${id}`);
+      if (res) {
+        form.setValue("name", res.data.data[0].name);
+        form.setValue("topCategoryId", res.data.data[0].topCategoryId);
+        setImage([
+          {
+            url: res.data.data[0].image,
+            name: res.data.data[0].image,
+          },
+        ]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const { data } = await axios.get("/api/topCategory");
+      setTopCategories(data.data);
+    };
+    getCategories();
+
+    if (id) {
+      updateData();
+    }
+  }, [id]);
 
   return (
     <Container className="my-10 lg:my-20 flex-col items-start">
@@ -119,7 +168,7 @@ const CategoryForm = () => {
           className="cursor-pointer w-8 h-8 lg:w-12 lg:h-12"
           onClick={() => router.back()}
         />
-        <p>Создать категорию</p>
+        <p>{id ? "Обновить категорию" : "Создать категорию"}</p>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 w-full">

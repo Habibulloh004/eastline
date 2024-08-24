@@ -20,7 +20,7 @@ async function Services() {
       </div>
       <Container className="py-10 flex-col gap-5 items-start">
         <p className="text-primary textNormal5 font-semibold">Услуги</p>
-        <article className="lg:border rounded-lg">
+        <article className="lg:border rounded-lg w-full">
           <div className="flex flex-col items-start justify-center space-y-3 lg:shadow-lg rounded-lg lg:px-12 py-3 lg:py-8 relative lg:overflow-hidden min-h-[130px]">
             <Image
               src={ServiceBanner}

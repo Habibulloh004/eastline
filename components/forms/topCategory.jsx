@@ -1,8 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Form } from "@/components/ui/form";
@@ -17,7 +17,10 @@ import { ChevronLeft } from "lucide-react";
 import { revalidatePath } from "@/lib/revalidate";
 
 const TopCategoryForm = () => {
-  const router = useRouter()
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
@@ -29,26 +32,54 @@ const TopCategoryForm = () => {
 
   const onSubmit = async (values) => {
     setIsLoading(true);
-
     try {
-      await axios.post("/api/topCategory", values);
+      if (id) {
+        await axios.patch(`/api/topCategory?id=${id}`, values);
+        toast.success("Если нужно что-то изменить или уточнить, дайте знать!");
+      } else {
+        await axios.post("/api/topCategory", values);
+        toast.success("Верхняя категория создана успешно!");
+      }
 
-      toast.success("Верхняя категория создана успешно!");
+      revalidatePath("changeTopCategory");
 
       form.reset();
-      revalidatePath("changeTopCategory")
       setIsLoading(false);
     } catch (error) {
       console.log(error);
       toast.error("Что то пошло не так. Пожалуйста, повторите попытку позже.");
       setIsLoading(false);
     }
+    router.push("/dashboard");
   };
+
+  async function updateData() {
+    try {
+      const res = await axios.get(`/api/topCategory?id=${id}`);
+      if (res) {
+        form.setValue("name", res.data.data[0].name);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    if (id) {
+      updateData();
+    }
+  }, [id]);
 
   return (
     <Container className="my-10 lg:my-20 flex-col items-start">
       <div className="text-primary textNormal5 font-semibold mb-5 flex items-center">
-        <ChevronLeft className="cursor-pointer w-8 h-8 lg:w-12 lg:h-12" onClick={() => {router.back()}} /> <p>Создать верхнюю категорию</p>
+        <ChevronLeft
+          className="cursor-pointer w-8 h-8 lg:w-12 lg:h-12"
+          onClick={() => {
+            router.back();
+          }}
+        />{" "}
+        <p>{id ? "Обновить верхнюю категорию" : "Создать верхнюю категорию"}</p>
       </div>
       <Form {...form}>
         <form

@@ -1,11 +1,11 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Container from "./container";
-import Image from "next/image";
 import { Button } from "../ui/button";
 import {
   Carousel,
   CarouselContent,
+  CarouselCounter,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
@@ -13,13 +13,22 @@ import {
 import emblaCarouselAutoplay from "embla-carousel-autoplay";
 import Link from "next/link";
 import { truncateText } from "@/lib/utils";
+import CustomImage from "./customImage";
 
-const Banner = ({ products, categories }) => {
+const Banner = ({ products, categories, currency }) => {
   const findTopCategoryId = (id) => {
     const topCategoryId = categories.find((category) => category.id == id);
     return topCategoryId;
   };
 
+  useEffect(() => {
+    function getCurrency() {
+      if (currency.length) {
+        localStorage.setItem("sum", currency[0].sum);
+      }
+    }
+    getCurrency();
+  }, []);
 
   return (
     <Container>
@@ -54,10 +63,10 @@ const Banner = ({ products, categories }) => {
                         </Link>
                       </div>
                       <p className="textSmall2 w-[50%] whitespace-normal break-words overflow-wrap">
-                        {truncateText(item.feature)}
+                        {truncateText(item.feature, 50)}
                       </p>
                       <div className="relative">
-                        <Image
+                        <CustomImage
                           src={item.image[0]}
                           width={100}
                           height={100}
@@ -67,7 +76,7 @@ const Banner = ({ products, categories }) => {
                           }`}
                         />
                         {item.image[1] && (
-                          <Image
+                          <CustomImage
                             src={item.image[1]}
                             width={100}
                             height={100}
@@ -81,8 +90,9 @@ const Banner = ({ products, categories }) => {
                 );
               })}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselCounter classNameCounter="bg-white" />
+            {/* <CarouselPrevious /> */}
+            {/* <CarouselNext /> */}
           </Carousel>
         </div>
         <div className="hidden md:block w-full text-secondary space-y-5">
@@ -90,7 +100,7 @@ const Banner = ({ products, categories }) => {
             {products[0] && (
               <div className="p-5 w-4/6 flex justify-between gap-y-1 bg-primary rounded-xl">
                 <div className="relative w-full">
-                  <Image
+                  <CustomImage
                     src={products[0].image[0]}
                     width={100}
                     height={100}
@@ -100,7 +110,7 @@ const Banner = ({ products, categories }) => {
                     }`}
                   />
                   {products[0].image[1] && (
-                    <Image
+                    <CustomImage
                       src={products[0].image[1]}
                       width={100}
                       height={100}
@@ -115,7 +125,7 @@ const Banner = ({ products, categories }) => {
                       {products[0].name}
                     </h1>
                     <p className="textSmall3 text-right w-[70%] whitespace-normal break-words overflow-wrap ml-auto">
-                      {truncateText(products[0].feature)}
+                      {truncateText(products[0].feature, 50)}
                     </p>
                   </div>
                   <Link
@@ -149,10 +159,10 @@ const Banner = ({ products, categories }) => {
                   </Link>
                 </div>
                 <p className="textSmall2 w-[70%] whitespace-normal break-words overflow-wrap">
-                  {truncateText(products[2].feature)}
+                  {truncateText(products[2].feature, 50)}
                 </p>
                 <div className="relative">
-                  <Image
+                  <CustomImage
                     src={products[2].image[0]}
                     width={100}
                     height={100}
@@ -162,7 +172,7 @@ const Banner = ({ products, categories }) => {
                     }`}
                   />
                   {products[2].image[1] && (
-                    <Image
+                    <CustomImage
                       src={products[2].image[1]}
                       width={100}
                       height={100}
@@ -178,7 +188,7 @@ const Banner = ({ products, categories }) => {
             {products[1] && (
               <div className="p-5 flex w-4/6 justify-between gap-y-1 bg-primary rounded-xl">
                 <div className="relative w-full">
-                  <Image
+                  <CustomImage
                     src={products[1].image[0]}
                     width={100}
                     height={100}
@@ -188,7 +198,7 @@ const Banner = ({ products, categories }) => {
                     }`}
                   />
                   {products[1].image[1] && (
-                    <Image
+                    <CustomImage
                       src={products[1].image[1]}
                       width={100}
                       height={100}
@@ -203,7 +213,7 @@ const Banner = ({ products, categories }) => {
                       {products[1].name}
                     </h1>
                     <p className="textSmall3 text-right w-[70%] whitespace-normal break-words overflow-wrap ml-auto">
-                      {truncateText(products[1].feature)}
+                      {truncateText(products[1].feature, 50)}
                     </p>
                   </div>
                   <Link
@@ -237,10 +247,10 @@ const Banner = ({ products, categories }) => {
                   </Link>
                 </div>
                 <p className="textSmall2 w-[50%] whitespace-normal break-words overflow-wrap">
-                  {truncateText(products[3].feature)}
+                  {truncateText(products[3].feature, 50)}
                 </p>
                 <div className="relative">
-                  <Image
+                  <CustomImage
                     src={products[3].image[0]}
                     width={100}
                     height={100}
@@ -250,7 +260,7 @@ const Banner = ({ products, categories }) => {
                     }`}
                   />
                   {products[3].image[1] && (
-                    <Image
+                    <CustomImage
                       src={products[3].image[1]}
                       width={100}
                       height={100}

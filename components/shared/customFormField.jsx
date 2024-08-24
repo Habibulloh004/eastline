@@ -16,15 +16,19 @@ import {
 import { Textarea } from "../ui/textarea";
 import "react-phone-number-input/style.css";
 import { cn } from "@/lib/utils";
+import CurrencyInput from "react-currency-input-field";
+import { PasswordInput } from "../ui/password-input";
 
 export const FormFieldType = {
   INPUT: "input",
+  PASSWORDINPUT: "passwordInput",
   TEXTAREA: "textarea",
   PHONE_INPUT: "phoneInput",
   CHECKBOX: "checkbox",
   DATE_PICKER: "datePicker",
   SELECT: "select",
   SKELETON: "skeleton",
+  CURRENCY: "currency",
 };
 
 const RenderInput = ({ field, className, props }) => {
@@ -33,6 +37,17 @@ const RenderInput = ({ field, className, props }) => {
       return (
         <FormControl>
           <Input
+            placeholder={props.placeholder}
+            {...field}
+            value={field.value || ""} // Ensure the input is controlled
+            className={cn("textBig border-0", props.className, className)}
+          />
+        </FormControl>
+      );
+    case FormFieldType.PASSWORDINPUT:
+      return (
+        <FormControl>
+          <PasswordInput
             placeholder={props.placeholder}
             {...field}
             value={field.value || ""} // Ensure the input is controlled
@@ -97,6 +112,43 @@ const RenderInput = ({ field, className, props }) => {
           />
         </FormControl>
       );
+    case FormFieldType.CURRENCY:
+      return (
+        <FormControl>
+          <CurrencyInput
+            placeholder={props.placeholder}
+            className={cn(
+              "w-full p-2 rounded-md custom-currency-input",
+              props.className,
+              className
+            )}
+            value={field.value || ""}
+            onValueChange={(value, name) => {
+              if (!value || !isNaN(value.replace(/\s/g, ""))) {
+                field.onChange(value);
+              } else {
+                // Log and reset if invalid input occurs
+                console.error("Invalid input: not a number");
+                field.onChange("");
+              }
+            }}
+            step={0.01}
+            allowDecimals
+            decimalSeparator="."
+            groupSeparator=" "
+            decimalsLimit={8} // Limit decimal points to 8
+            prefix=""
+            disableAbbreviations // Prevents K/M abbreviations
+            onBlur={() => {
+              // Ensure the field is cleared if no valid number is present
+              if (isNaN(Number(field.value.replace(/\s/g, "")))) {
+                field.onChange("");
+              }
+            }}
+          />
+        </FormControl>
+      );
+
     case FormFieldType.SKELETON:
       return props.renderSkeleton ? props.renderSkeleton(field) : null;
     default:

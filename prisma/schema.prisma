@@ -55,3 +55,50 @@ model Product {
   category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId  Int?
 }
+
+model Sertificate {
+  id        Int      @id @default(autoincrement())
+  name      String
+  image     String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model License {
+  id        Int      @id @default(autoincrement())
+  name      String
+  image     String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model News {
+  id        Int      @id @default(autoincrement())
+  name      String
+  image     String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model Partner {
+  id        Int      @id @default(autoincrement())
+  name      String
+  image     String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
+model Currency {
+  id        Int      @id @default(autoincrement())
+  sum       String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}

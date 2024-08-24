@@ -22,18 +22,22 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const DeleteItem = ({ deleteRow, payment }) => {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const deleteItem = async (payment) => {
     try {
-
       const response = await axios.delete(
-        `http://localhost:3000/api/topCategory`,
+        `http://localhost:3000/api/${
+          pathname.split("/")[2].slice(6).toLowerCase().slice(0, 1) +
+          pathname.split("/")[2].slice(6).slice(1)
+        }`,
         {
           params: {
             id: payment.id,
@@ -61,7 +65,13 @@ const DeleteItem = ({ deleteRow, payment }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => console.log(payment)}>
-            Copy payment ID
+            <Link
+              href={`/dashboard/${`create${pathname
+                .split("/")[2]
+                .slice(6)}`}?id=${payment.id}`}
+            >
+              Изменить продукт
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
@@ -89,7 +99,7 @@ const DeleteItem = ({ deleteRow, payment }) => {
             <AlertDialogCancel onClick={() => setOpen(false)}>
               Отмена
             </AlertDialogCancel>
-            
+
             <AlertDialogAction
               className="hover:bg-primary"
               onClick={() => {
@@ -97,7 +107,12 @@ const DeleteItem = ({ deleteRow, payment }) => {
                 toast.promise(callFunction, {
                   loading: "Данные удаляются...",
                   success: <p>Данные успешно удалены!</p>,
-                  error: <p>Произошла ошибка при удалении данных. Повторите попытку позже.</p>,
+                  error: (
+                    <p>
+                      Произошла ошибка при удалении данных. Повторите попытку
+                      позже.
+                    </p>
+                  ),
                 });
               }}
             >

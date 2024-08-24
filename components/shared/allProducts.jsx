@@ -4,25 +4,32 @@ import React, { memo, useCallback, useState } from "react";
 import Container from "./container";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { Button } from "../ui/button";
-import { f, getLastProducts } from "@/lib/utils";
-import Image from "next/image";
+import { f, getLastItems } from "@/lib/utils";
+import CustomImage from "./customImage";
 
-const AllProducts = ({ products, categories }) => {
+const AllProducts = ({ products, categories, currency }) => {
   const [currentCategory, setCurrentCategory] = useState(0);
   const [renderedProducts, setRenderedProducts] = useState(products);
+
+  const getCurrencySum = (dollar) => {
+    if (currency.length) {
+      const sum = currency[0].sum;
+      return Number(sum) * Number(dollar);
+    }
+  };
 
   const changeProducts = useCallback(
     (idx, item) => {
       setCurrentCategory(idx);
       setRenderedProducts(
-        item == "new" ? products : getLastProducts(item.products)
+        item === "new" ? products : getLastItems(item.products, 4)
       );
     },
     [products]
   );
 
   return (
-    <Container className="pt-5 w-[95%] flex-col lg:w-10/12 lg:mx-auto justify-end items-start md:justify-center mx-0 ml-auto">
+    <Container className="pt-5 w-[95%] overflow-clip flex-col lg:w-10/12 lg:mx-auto justify-end items-start md:justify-center mx-0 ml-auto">
       <p className="textNormal5 font-semibold mb-7">
         <span className="text-primary">Новинки</span> и товары
       </p>
@@ -30,7 +37,7 @@ const AllProducts = ({ products, categories }) => {
         <CarouselContent>
           <CarouselItem className="basis-[30%] md:basis-[15%] lg:basis-[10%] mr-5">
             <Button
-              variant={`${currentCategory == 0 ? "" : "secondary"}`}
+              variant={`${currentCategory === 0 ? "" : "secondary"}`}
               onClick={() => changeProducts(0, "new")}
               className="textSmall3 font-semibold"
             >
@@ -44,7 +51,7 @@ const AllProducts = ({ products, categories }) => {
                 className="basis-[30%] md:basis-[15%] lg:basis-[10%] mr-5"
               >
                 <Button
-                  variant={`${currentCategory == i + 1 ? "" : "secondary"}`}
+                  variant={`${currentCategory === i + 1 ? "" : "secondary"}`}
                   onClick={() => changeProducts(i + 1, item)}
                   className="textSmall3 font-semibold"
                 >
@@ -57,10 +64,18 @@ const AllProducts = ({ products, categories }) => {
       </Carousel>
       <section className="py-5 w-full flex justify-between gap-5 items-start">
         <div className="lg:grid w-1/2 grid-cols-1 gap-5 hidden">
-          {renderedProducts.length &&
-            renderedProducts.slice(0, 2).map((item, i) => (
-              <Cards variant={"first"} props={item} key={i} />
-            ))}
+          {renderedProducts.length > 0 &&
+            renderedProducts
+              .slice(0, 2)
+              .map((item, i) => (
+                <Cards
+                  variant={"first"}
+                  props={item}
+                  key={i}
+                  currency={currency}
+                  getCurrencySum={getCurrencySum}
+                />
+              ))}
         </div>
         <div className="lg:w-1/2">
           <Carousel
@@ -68,22 +83,34 @@ const AllProducts = ({ products, categories }) => {
             paginate={"false"}
           >
             <CarouselContent>
-              {renderedProducts.map((item, i) => {
-                return (
-                  <CarouselItem
-                    key={i}
-                    className="basis-[65%] sm:basis-[50%] md:basis-[40%]"
-                  >
-                    <Cards variant={"second"} props={item} />
-                  </CarouselItem>
-                );
-              })}
+              {renderedProducts.length > 0 &&
+                renderedProducts.map((item, i) => {
+                  return (
+                    <CarouselItem
+                      key={i}
+                      className="basis-[65%] sm:basis-[50%] md:basis-[40%]"
+                    >
+                      <Cards
+                        variant={"second"}
+                        props={item}
+                        currency={currency}
+                        getCurrencySum={getCurrencySum}
+                      />
+                    </CarouselItem>
+                  );
+                })}
             </CarouselContent>
           </Carousel>
           <div className="hidden w-full lg:grid grid-cols-2 gap-5">
-            {renderedProducts.length &&
+            {renderedProducts.length > 0 &&
               renderedProducts.map((item, i) => (
-                <Cards variant={"second"} props={item} key={i} />
+                <Cards
+                  variant={"second"}
+                  props={item}
+                  key={i}
+                  currency={currency}
+                  getCurrencySum={getCurrencySum}
+                />
               ))}
           </div>
         </div>
@@ -92,28 +119,29 @@ const AllProducts = ({ products, categories }) => {
   );
 };
 
-const Cards = memo(({ props, variant }) => {
+const Cards = memo(({ props, variant, currency, getCurrencySum }) => {
   const { name, image, price } = props;
+
   return (
     <>
-      {variant == "second" ? (
+      {variant === "second" ? (
         <article className="border rounded-xl flex flex-col items-center justify-center py-5 gap-4 md:h-[380px]">
           <p>{name}</p>
-          <span className="text-xs bg-black text-white rounded-md px-2 py-1 translate-y-5">
+          <span className="text-xs bg-black text-white rounded-md px-2 py-1 z-[7]">
             NEW
           </span>
-          <Image
+          <CustomImage
             src={`${image[0]}`}
             className="w-[70%] md:w-[50%] lg:w-[60%] aspect-square"
             width={100}
             height={100}
             alt={`${image[0]}`}
           />
-          <p>{f(price)} сум</p>
+          <p>{f(getCurrencySum(price))} сум</p>
         </article>
       ) : (
         <article className="border w-full rounded-xl flex items-center justify-center p-5 gap-5 textNormal md:h-[380px]">
-          <Image
+          <CustomImage
             src={`${image[0]}`}
             className="md:w-[50%] aspect-square"
             width={100}
@@ -125,7 +153,7 @@ const Cards = memo(({ props, variant }) => {
             <span className="text-xs bg-black text-white rounded-md px-2 py-1 ">
               NEW
             </span>
-            <p>{f(price)} сум</p>
+            <p>{f(getCurrencySum(price))} сум</p>
           </div>
         </article>
       )}
