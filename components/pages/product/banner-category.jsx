@@ -6,10 +6,16 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { f, getCurrencySum, truncateText } from "@/lib/utils";
+import { f, truncateText } from "@/lib/utils";
 import emblaCarouselAutoplay from "embla-carousel-autoplay";
 
-const BannerProducts = ({ randomProducts }) => {
+const BannerProducts = ({ randomProducts, currency }) => {
+  const getCurrencySum = (dollar) => {
+    if (currency.length) {
+      const sum = currency[0].sum;
+      return Number(sum) * Number(dollar);
+    }
+  };
   return (
     <div className="grid lg:grid-cols-2 grid-cols-1 gap-4">
       {randomProducts[0] && (
@@ -36,11 +42,11 @@ const BannerProducts = ({ randomProducts }) => {
           </div>
           <div className="flex flex-col gap-5 justify-between items-end py-5 px-3">
             <div className="space-y-5">
-              <h1 className="font-medium textBig2 text-right leading-7">
+              <h1 className="font-medium textNormal4 text-right leading-7">
                 {randomProducts[0].name}
               </h1>
               <p className="textSmall3 text-right w-[70%] whitespace-normal break-words overflow-wrap ml-auto">
-                {truncateText(randomProducts[0].feature, 50)}
+                {truncateText(randomProducts[0].description, 50)}
               </p>
             </div>
             {/* <Link
@@ -71,9 +77,9 @@ const BannerProducts = ({ randomProducts }) => {
               return (
                 <CarouselItem
                   key={i}
-                  className="text-center text-black basis-auto md:basis-[45%] h-full border-2 py-3 rounded-xl mr-2"
+                  className="text-center text-black basis-auto md:basis-[45%] min-h-[300px] border-2 py-3 rounded-xl mr-2"
                 >
-                  <div className="px-3 flex flex-col gap-y-1 rounded-md">
+                  <div className="h-full px-3 flex flex-col gap-y-1 rounded-md justify-between">
                     <h1 className="textSmall3 font-bold">{item.name}</h1>
                     <div className="relative bg-white rounded-md">
                       <CustomImage
@@ -81,7 +87,7 @@ const BannerProducts = ({ randomProducts }) => {
                         width={100}
                         height={100}
                         alt={`banner-img-${item.id}`}
-                        className={`w-full h-full mx-auto aspect-square object-contain mb-5`}
+                        className={`w-full mx-auto aspect-square object-contain mb-5`}
                       />
                     </div>
                     <p className="textSmall4 font-bold">
@@ -89,7 +95,7 @@ const BannerProducts = ({ randomProducts }) => {
                       {f(getCurrencySum(item.price))} сум
                     </p>
                     <p className="textSmall">
-                      {truncateText(item.feature, 20)}
+                      {truncateText(item.description, 20)}
                     </p>
                   </div>
                 </CarouselItem>

@@ -15,6 +15,7 @@ export async function GET(req) {
 
 export async function POST(req) {
   const data = await req.json();
+  console.log(data);
 
   const createProduct = await db.product.create({
     data: {
@@ -37,7 +38,6 @@ export async function POST(req) {
 
 export async function DELETE(req) {
   try {
-    console.log(req, "product");
     const id = await req.nextUrl.searchParams.get("id");
     const deleteTopCategory = await db.product.delete({
       where: { id: Number(id) },

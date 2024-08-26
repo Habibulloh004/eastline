@@ -46,12 +46,6 @@ export const product = [
     ),
   },
   {
-    accessorKey: "feature",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Feature" />
-    ),
-  },
-  {
     accessorKey: "createdAt",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Создано в" />

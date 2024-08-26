@@ -173,7 +173,6 @@ function DropTarget({ images, setImages }) {
 
             <div className="mt-4 lg:w-[45%] flex flex-wrap gap-3 justify-center lg:justify-between items-start overflow-y-auto">
               {images.map((image, index) => {
-                console.log(image);
                 return (
                   <div
                     key={index}

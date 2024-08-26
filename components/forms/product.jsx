@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Form } from "@/components/ui/form";
+import { Form, FormLabel } from "@/components/ui/form";
 import CustomFormField, { FormFieldType } from "../shared/customFormField";
 import { Product } from "@/lib/validation";
 import SubmitButton from "../shared/submitButton";
@@ -15,15 +15,21 @@ import { ChevronLeft } from "lucide-react";
 import { SelectItem } from "../ui/select";
 import DropTarget from "../shared/fileDnd";
 import { supabase } from "@/lib/utils";
+import Todo from "../shared/note/NotePicker";
 
-const ProductForm = () => {
+const ProductForm = ({ categories, topCategories }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
   const [images, setImages] = useState([]);
-  const [topCategories, setTopCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [content, setContent] = useState("");
+
+  const handleContentChange = (reason) => {
+    setContent(reason);
+    form.setValue("feature", reason);
+  };
 
   const dataURLToBlob = (dataURL) => {
     const arr = dataURL.split(",");
@@ -40,6 +46,10 @@ const ProductForm = () => {
   const form = useForm({
     resolver: zodResolver(Product),
     defaultValues: {
+      categoryId: "",
+      description: "",
+      feature: "",
+      brand: "",
       name: "",
       topCategoryId: "",
     },
@@ -92,6 +102,11 @@ const ProductForm = () => {
       toast.error("Пожалуйста, выберите изображение");
       return;
     }
+
+    if (!values.feature.length) {
+      toast.error("Напишите, пожалуйста, характеристика");
+      return;
+    }
     setIsLoading(true);
 
     try {
@@ -100,7 +115,7 @@ const ProductForm = () => {
         const updateImages = console.log(imagesUpload, "upload image");
         const res = await axios.patch(`/api/product?id=${id}`, {
           ...values,
-          images: imagesUpload
+          images: imagesUpload,
         });
         if (res) {
           toast.success("Товар изменена успешно!");
@@ -114,6 +129,7 @@ const ProductForm = () => {
       form.reset();
       setImages([]);
       setIsLoading(false);
+      setContent("");
     } catch (error) {
       console.log(error);
       toast.error("Что-то пошло не так. Пожалуйста, повторите попытку позже.");
@@ -140,6 +156,7 @@ const ProductForm = () => {
             };
           })
         );
+        setContent(feature);
       }
     } catch (error) {
       console.log(error);
@@ -147,12 +164,6 @@ const ProductForm = () => {
   }
 
   useEffect(() => {
-    const getCategories = async () => {
-      const { data } = await axios.get("/api/category");
-      setTopCategories(data.data);
-    };
-    getCategories();
-
     if (id) {
       updateData();
     }
@@ -166,8 +177,9 @@ const ProductForm = () => {
           className="cursor-pointer w-8 h-8 lg:w-12 lg:h-12"
           onClick={() => router.back()}
         />
-        <p>Создать товар</p>
+        <p>{id ? "Изменить" : "Создать"} товар</p>
       </div>
+      {/* <Notes /> */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 w-full ">
           <div className="w-full space-y-6 lg:w-1/2">
@@ -177,9 +189,8 @@ const ProductForm = () => {
               name="name"
               label="Название товара"
             />
-
             <CustomFormField
-              fieldType={FormFieldType.INPUT}
+              fieldType={FormFieldType.NUMBER}
               control={form.control}
               name="price"
               label="Цена продукта"
@@ -196,13 +207,21 @@ const ProductForm = () => {
               name="description"
               label="Описание продукта"
             />
-            <CustomFormField
+            <div>
+              <FormLabel className="text-xs lg:text-base">
+                Характеристика продукта
+              </FormLabel>
+              <Todo
+                handleContentChange={handleContentChange}
+                content={content}
+              />
+              {/* <CustomFormField
               fieldType={FormFieldType.TEXTAREA}
               control={form.control}
               name="feature"
               label="Характеристика продукта"
-            />
-
+            /> */}
+            </div>
             <CustomFormField
               fieldType={FormFieldType.SELECT}
               control={form.control}
@@ -210,7 +229,7 @@ const ProductForm = () => {
               label="Категория"
               placeholder="Выберите категорию"
             >
-              {topCategories.map((category) => (
+              {categories.map((category) => (
                 <SelectItem key={category.id} value={`${category.id}`}>
                   <p>{category.name}</p>
                 </SelectItem>

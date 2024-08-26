@@ -4,7 +4,7 @@ import React, { memo, useCallback, useState } from "react";
 import Container from "./container";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { Button } from "../ui/button";
-import { f, getLastItems } from "@/lib/utils";
+import { f, getLastItems, truncateText } from "@/lib/utils";
 import CustomImage from "./customImage";
 
 const AllProducts = ({ products, categories, currency }) => {
@@ -35,7 +35,7 @@ const AllProducts = ({ products, categories, currency }) => {
       </p>
       <Carousel className="w-full text-foreground" paginate={"false"}>
         <CarouselContent>
-          <CarouselItem className="basis-[30%] md:basis-[15%] lg:basis-[10%] mr-5">
+          <CarouselItem className="basis-[40%] md:basis-[10%] lg:basis-[12%] mr-5">
             <Button
               variant={`${currentCategory === 0 ? "" : "secondary"}`}
               onClick={() => changeProducts(0, "new")}
@@ -48,14 +48,14 @@ const AllProducts = ({ products, categories, currency }) => {
             return (
               <CarouselItem
                 key={i}
-                className="basis-[30%] md:basis-[15%] lg:basis-[10%] mr-5"
+                className="basis-[60%] md:basis-[40%] lg:basis-[30%] mr-5"
               >
                 <Button
                   variant={`${currentCategory === i + 1 ? "" : "secondary"}`}
                   onClick={() => changeProducts(i + 1, item)}
-                  className="textSmall3 font-semibold"
+                  className="textSmall3 font-semibold w-full lg:block"
                 >
-                  {item.name}
+                  {truncateText(item.name, 20)}
                 </Button>
               </CarouselItem>
             );
@@ -77,7 +77,7 @@ const AllProducts = ({ products, categories, currency }) => {
                 />
               ))}
         </div>
-        <div className="lg:w-1/2">
+        <div className="w-full lg:w-1/2">
           <Carousel
             className="lg:hidden w-full text-foreground overflow-x-clip"
             paginate={"false"}

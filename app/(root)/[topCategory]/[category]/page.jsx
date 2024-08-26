@@ -43,6 +43,8 @@ const Category = async ({ params }) => {
   const topProductsData = await getTopProducts();
   const productsData = await getProducts();
   const categoryData = await getCategory();
+  const currency = await db.currency.findMany();
+
   return (
     <main className="min-h-[50%] py-10 flex flex-col">
       <NavigationProduct
@@ -59,6 +61,7 @@ const Category = async ({ params }) => {
           topProductsData={topProductsData}
           productsData={productsData}
           categorys={categoryData.categorysData}
+          currency={currency}
         />
       </div>
     </main>

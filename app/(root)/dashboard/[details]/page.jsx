@@ -6,9 +6,21 @@ import ProductForm from "@/components/forms/product";
 import SertificateForm from "@/components/forms/sertificate";
 import TopCategoryForm from "@/components/forms/topCategory";
 import Getelements from "@/components/pages/dashboard/getElements";
+import db from "@/db/db";
 import React from "react";
 
 async function Create({ params }) {
+  const topCategories = await db.topCategory.findMany({
+    include: {
+      categories: true,
+    },
+  });
+  const categories = await db.category.findMany({
+    include: {
+      products: true,
+    },
+  });
+  console.log(categories);
   const renderPage = () => {
     switch (params.details) {
       case "createTopCategory":
@@ -16,7 +28,9 @@ async function Create({ params }) {
       case "createCategory":
         return <CategoryForm />;
       case "createProduct":
-        return <ProductForm />;
+        return (
+          <ProductForm categories={categories} topCategories={topCategories} />
+        );
       case "createSertificate":
         return <SertificateForm />;
       case "createPartner":
@@ -32,4 +46,4 @@ async function Create({ params }) {
   };
   return <>{renderPage()}</>;
 }
-export default Create
+export default Create;

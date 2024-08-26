@@ -24,8 +24,9 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from "@/components/ui/pagination";
+import { f } from "@/lib/utils";
 
-const Products = ({ productsData, categorys, topProductsData }) => {
+const Products = ({ productsData, categorys, topProductsData, currency }) => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   // Paginated Data
@@ -34,6 +35,13 @@ const Products = ({ productsData, categorys, topProductsData }) => {
     const end = start + pageSize;
     return productsData.slice(start, end);
   }, [page, pageSize, productsData]);
+
+  const getCurrencySum = (dollar) => {
+    if (currency.length) {
+      const sum = currency[0].sum;
+      return Number(sum) * Number(dollar);
+    }
+  };
 
   const columns = useMemo(
     () => [
@@ -135,7 +143,6 @@ const Products = ({ productsData, categorys, topProductsData }) => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {table.getRowModel().rows.map((row) => {
           const item = row.original;
-          console.log(item.image);
           return (
             <Link
               href={`/${topProductsData[0].id}/${item.categoryId}/${item.id}`}
@@ -152,7 +159,7 @@ const Products = ({ productsData, categorys, topProductsData }) => {
               <div className="w-full flex flex-col gap-2">
                 <h1 className="font-bold textNormal2">{item.name}</h1>
                 <p className="flex justify-between w-full">
-                  Цена:<span>{item.price}000 сум</span>
+                  Цена:<span>{f(getCurrencySum(+item.price))} сум</span>
                 </p>
               </div>
             </Link>

@@ -48,7 +48,7 @@ const Banner = ({ products, categories, currency }) => {
                 const topCategoryId = findTopCategoryId(item.categoryId);
                 return (
                   <CarouselItem key={i} className="md:basis-1/2">
-                    <div className="px-3 flex flex-col gap-y-1">
+                    <div className="px-3 flex flex-col gap-y-3">
                       <div className="flex justify-between items-start">
                         <h1 className="font-medium textNormal4 leading-7">
                           {item.name}
@@ -63,7 +63,7 @@ const Banner = ({ products, categories, currency }) => {
                         </Link>
                       </div>
                       <p className="textSmall2 w-[50%] whitespace-normal break-words overflow-wrap">
-                        {truncateText(item.feature, 50)}
+                        {truncateText(item.description, 50)}
                       </p>
                       <div className="relative">
                         <CustomImage
@@ -121,11 +121,11 @@ const Banner = ({ products, categories, currency }) => {
                 </div>
                 <div className="flex flex-col gap-5 justify-between items-end py-5 px-3">
                   <div className="space-y-5">
-                    <h1 className="font-medium textBig2 text-right leading-7">
+                    <h1 className="font-medium textNormal4 text-right leading-7">
                       {products[0].name}
                     </h1>
                     <p className="textSmall3 text-right w-[70%] whitespace-normal break-words overflow-wrap ml-auto">
-                      {truncateText(products[0].feature, 50)}
+                      {truncateText(products[0].description, 50)}
                     </p>
                   </div>
                   <Link
@@ -159,7 +159,7 @@ const Banner = ({ products, categories, currency }) => {
                   </Link>
                 </div>
                 <p className="textSmall2 w-[70%] whitespace-normal break-words overflow-wrap">
-                  {truncateText(products[2].feature, 50)}
+                  {truncateText(products[2].description, 50)}
                 </p>
                 <div className="relative">
                   <CustomImage
@@ -209,11 +209,11 @@ const Banner = ({ products, categories, currency }) => {
                 </div>
                 <div className="flex flex-col gap-5 justify-between items-end py-5 px-3">
                   <div className="space-y-5">
-                    <h1 className="font-medium textBig2 text-right leading-7">
+                    <h1 className="font-medium textNormal4 text-right leading-7">
                       {products[1].name}
                     </h1>
                     <p className="textSmall3 text-right w-[70%] whitespace-normal break-words overflow-wrap ml-auto">
-                      {truncateText(products[1].feature, 50)}
+                      {truncateText(products[1].description, 50)}
                     </p>
                   </div>
                   <Link
@@ -247,7 +247,7 @@ const Banner = ({ products, categories, currency }) => {
                   </Link>
                 </div>
                 <p className="textSmall2 w-[50%] whitespace-normal break-words overflow-wrap">
-                  {truncateText(products[3].feature, 50)}
+                  {truncateText(products[3].description, 50)}
                 </p>
                 <div className="relative">
                   <CustomImage

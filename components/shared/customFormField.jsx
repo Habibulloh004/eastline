@@ -44,6 +44,18 @@ const RenderInput = ({ field, className, props }) => {
           />
         </FormControl>
       );
+    case FormFieldType.NUMBER:
+      return (
+        <FormControl>
+          <Input
+            type="number"
+            placeholder={props.placeholder}
+            {...field}
+            value={field.value || ""} // Ensure the input is controlled
+            className={cn("textBig border-0", props.className, className)}
+          />
+        </FormControl>
+      );
     case FormFieldType.PASSWORDINPUT:
       return (
         <FormControl>

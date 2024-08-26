@@ -1,14 +1,10 @@
-import { ChevronDown, Menu } from "lucide-react";
+"use client";
 
+import { ChevronDown, Menu } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -27,7 +23,7 @@ export function HeaderDropdown({ topCategory }) {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="max-w-xs">
-        {topCategory?.map((topCategory, idx) => (
+        {topCategory?.map((topCategory) => (
           <DropdownMenuSub key={topCategory.id}>
             <DropdownMenuSubTrigger
               className="py-2 px-4 lg:text:sm"
@@ -35,10 +31,11 @@ export function HeaderDropdown({ topCategory }) {
             >
               {topCategory.name}
             </DropdownMenuSubTrigger>
-            {topCategory?.categories.length > 0 ? (
-              <DropdownMenuPortal>
-                <DropdownMenuSubContent>
-                  {topCategory.categories.map((category, i) => (
+            {/* Large screens: Show subcategories from the side */}
+            <div className="hidden sm:block">
+              {topCategory?.categories.length > 0 ? (
+                <DropdownMenuSubContent side="right">
+                  {topCategory.categories.map((category) => (
                     <DropdownMenuItem asChild key={category.id}>
                       <Link href={`/${topCategory.id}/${category.id}`}>
                         {category.name}
@@ -46,8 +43,22 @@ export function HeaderDropdown({ topCategory }) {
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuSubContent>
-              </DropdownMenuPortal>
-            ) : null}
+              ) : null}
+            </div>
+            {/* Small screens: Show subcategories from the bottom */}
+            <div className="block sm:hidden">
+              {topCategory?.categories.length > 0 ? (
+                <DropdownMenuSubContent side="bottom">
+                  {topCategory.categories.map((category) => (
+                    <DropdownMenuItem asChild key={category.id}>
+                      <Link href={`/${topCategory.id}/${category.id}`}>
+                        {category.name}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuSubContent>
+              ) : null}
+            </div>
           </DropdownMenuSub>
         ))}
       </DropdownMenuContent>

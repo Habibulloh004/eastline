@@ -9,14 +9,21 @@ import { Input } from "../ui/input";
 import HeroTitle from "./hero-title";
 import axios from "axios";
 import { HeaderDropdown } from "./header-dropdown";
+import SearchComponent from "./searchComponent";
 
 const Header = async () => {
   const fetchData = async () => {
-    const result = await axios.get(`${process.env.BACK_URL}/api/topCategory`);
-    return result;
+    const topCategories = await axios.get(
+      `${process.env.BACK_URL}/api/topCategory`
+    );
+    const categories = await axios.get(
+      `${process.env.BACK_URL}/api/category`
+    );
+    return { topCategories, categories };
   };
-  
-  const topCategories = await fetchData();
+
+  const { topCategories, categories } = await fetchData();
+  // console.log(categories,"categories")
 
   return (
     <>
@@ -45,21 +52,12 @@ const Header = async () => {
               <Link href={"/"}>
                 <Image src={Logo} alt="Logo" className="w-[12vw] min-w-24" />
               </Link>
-              <div className="relative">
-                <Input
-                  type="text"
-                  placeholder="Поиск по сайту"
-                  className="rounded-3xl border border-primary pl-3 w-[170px] sm:w-[200px] md:w-[250px]"
-                />
-                <span className="absolute right-1 top-1/2 -translate-y-1/2 bg-primary rounded-full text-foreground h-[85%] aspect-square flex items-center justify-center">
-                  <Search className="text-secondary w-3 md:w-5" />
-                </span>
-              </div>
+              <SearchComponent categories={categories.data.data} />
             </Container>
           </div>
         </Container>
       </header>
-      <nav className="text-secondary textSmall bg-primary w-full sticky top-0 z-[9]">
+      <nav className="text-secondary textSmall bg-primary sticky top-0 z-[999] w-full">
         <Container>
           <ul className="flex items-center gap-2 md:gap-10">
             {navItems.map((item) => {
